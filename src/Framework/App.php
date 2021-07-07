@@ -14,12 +14,36 @@ use Psr\Http\Message\ServerRequestInterface;
 class App
 {
     /**
-     * Method with a runing behaviour, it takes a request
+     * It takes generally a list of modules to load
+     * @var array $modules
+     */
+    private array $modules = [];
+    /**
+     * @var ManagerRouter
+     */
+    private $routemanager;
+    /**
+     * App constructor
+     * List of modules to load in the application.
+     * exemple : BlogModule in order to render a page of the Blog
+     * @param array $modules
+     */
+     public function __construct(array $modules = []){
+
+         $this->routemanager = new ManagerRouter();
+         foreach ($modules as $module){
+          $this->modules[] = new $module($this->routemanager);
+         }
+    }
+
+    /**
+     * Method with a running behaviour, it takes a request
      * and return a response
      *
-     * @see    run()
-     * @param  ServerRequestInterface $request
+     * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
+     * @see    run()
      */
     public function run(ServerRequestInterface $request):ResponseInterface
     {
@@ -30,13 +54,40 @@ class App
                 ->withHeader('Location', substr($url, 0, -1));
         }
 
-        if ($url === '/blog') {
-            return new Response(200, [], '<h1>Welcome to my Blog</h1>');
+       $result = $this->routemanager->match($request);
+        if(is_null($result)) {
+            return new Response(
+                404
+                , [],
+                '<h1>Error 404</h1>');
         }
 
-         // return (new Response())
-              //->getBody()->write('Bonjour');
+            $params = $result->getParams();
+            $request = array_reduce(array_keys($params),
+                function ($request,$key) use ($params)
+                {
 
-        return new Response(404, [], '<h1>Error 404</h1>');
-    }
+                return $request->withAttribute($key,$params[$key]);
+
+               },$request);
+
+            $response = call_user_func_array(
+                $result->getCallback(),
+                [$request]);
+
+            if(is_string($response))
+            {
+                return new Response(200,[],$response);
+            }
+            else if($response instanceof ResponseInterface)
+            {
+                return $response;
+            }
+            else
+            {
+                Throw new \Exception('the response is not a string or a responseinterface');
+            }
+
+        }
+
 }
