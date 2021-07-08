@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,17 +23,25 @@ class App
      * @var ManagerRouter
      */
     private $routemanager;
+
     /**
      * App constructor
      * List of modules to load in the application.
      * exemple : BlogModule in order to render a page of the Blog
      * @param array $modules
+     * @param array $dependencies
      */
-     public function __construct(array $modules = []){
+     public function __construct(array $modules = [],array $dependencies = []){
 
          $this->routemanager = new ManagerRouter();
+
+         if(array_key_exists('renderer',$dependencies))
+         {
+              $dependencies['renderer']->addGlobal('router',$this->routemanager);
+         }
+
          foreach ($modules as $module){
-          $this->modules[] = new $module($this->routemanager);
+          $this->modules[] = new $module($this->routemanager,$dependencies['renderer']);
          }
     }
 

@@ -12,11 +12,21 @@ use App\Blog\BlogModule;
 
 require '../vendor/autoload.php';
 
+$renderer = new \Framework\ManagerRenderer();
+$renderer->addPath(dirname(__DIR__).'/templates');
 $app = new \Framework\App([
 
      BlogModule::class
+],[
+
+    'renderer' => $renderer
 ]);
 
-$response  = $app->run(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+try {
+    $response = $app->run(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+} catch (Exception $e) {
+
+    echo 'Errors in : ' .$e->getMessage();
+}
 
 \Http\Response\send($response);

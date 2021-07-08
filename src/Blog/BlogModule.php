@@ -4,32 +4,40 @@
 namespace App\Blog;
 
 
+use Framework\ManagerRenderer;
 use Framework\ManagerRouter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class BlogModule
 {
-
-    public function __construct(ManagerRouter $routemanager)
+    private $renderer;
+    public function __construct(ManagerRouter $routemanager,ManagerRenderer $renderer)
     {
+        $this->renderer = $renderer;
+        $this->renderer->addPath('blog',__DIR__.'/views');
       $routemanager->get(
           '/blog',[$this,'index'],'blog.index'
       );
 
         $routemanager->get(
-            '/blog/{slug:[a-z\-]+}',[$this,'show'],'blog.show'
+            '/blog/{slug:[a-z\-0-9]+}',[$this,'show'],'blog.show'
         );
     }
 
     public function index(ServerRequestInterface $request):string{
 
-        return '<h1>Welcome to my blog</h1>';
+        /*return '<h1>Welcome to my blog</h1>';*/
+        return $this->renderer->render('@blog/index');
 
     }
     public function show(ServerRequestInterface $request):string{
-        $slug = $request->getAttribute('slug');
-        return '<h1>Welcome to the post '. $slug .'</h1>';
+        /*$slug = $request->getAttribute('slug');
+        return '<h1>Welcome to the post '. $slug .'</h1>';*/
+
+        return $this->renderer->render('@blog/show',
+            ['slug'=>$request->getAttribute('slug')]
+        );
 
     }
 }
