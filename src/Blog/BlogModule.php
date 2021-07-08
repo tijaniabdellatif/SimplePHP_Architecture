@@ -1,38 +1,102 @@
 <?php
 
+namespace Framework;
 
-namespace App\Blog;
 
-use Framework\ManagerRouter;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class BlogModule
+/**
+ * Class App : initialisation of the application
+ *
+ * @namespace Framework
+ */
+class App
 {
+    /**
+     * It takes generally a list of modules to load
+     * @var array $modules
+     */
+    private array $modules = [];
+    /**
+     * @var ManagerRouter
+     */
+    private $routemanager;
 
-    public function __construct(ManagerRouter $routemanager)
-    {
-        $routemanager->get(
-            '/blog',
-            [$this,'index'],
-            'blog.index'
-        );
+    /**
+     * App constructor
+     * List of modules to load in the application.
+     * exemple : BlogModule in order to render a page of the Blog
+     * @param array $modules
+     * @param array $dependencies
+     */
+     public function __construct(array $modules = [],array $dependencies = []){
 
-        $routemanager->get(
-            '/blog/{slug:[a-z\-]+}',
-            [$this,'show'],
-            'blog.show'
-        );
+         $this->routemanager = new ManagerRouter();
+
+         if(array_key_exists('renderer',$dependencies))
+         {
+              $dependencies['renderer']->addGlobal('router',$this->routemanager);
+         }
+
+         foreach ($modules as $module){
+          $this->modules[] = new $module($this->routemanager,$dependencies['renderer']);
+         }
     }
 
-    public function index(ServerRequestInterface $request):string
+    /**
+     * Method with a running behaviour, it takes a request
+     * and return a response
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws \Exception
+     * @see    run()
+     */
+    public function run(ServerRequestInterface $request):ResponseInterface
     {
+        $url = $request->getUri()->getPath();
+        if (!empty($url) && $url[-1] === "/") {
+            return (new Response())
+                ->withStatus(301)
+                ->withHeader('Location', substr($url, 0, -1));
+        }
 
-        return '<h1>Welcome to my blog</h1>';
-    }
-    public function show(ServerRequestInterface $request):string
-    {
-        $slug = $request->getAttribute('slug');
-        return '<h1>Welcome to the post '. $slug .'</h1>';
-    }
+       $result = $this->routemanager->match($request);
+        if(is_null($result)) {
+            return new Response(
+                404
+                , [],
+                '<h1>Error 404</h1>');
+        }
+
+            $params = $result->getParams();
+            $request = array_reduce(array_keys($params),
+                function ($request,$key) use ($params)
+                {
+
+                return $request->withAttribute($key,$params[$key]);
+
+               },$request);
+
+            $response = call_user_func_array(
+                $result->getCallback(),
+                [$request]);
+
+            if(is_string($response))
+            {
+                return new Response(200,[],$response);
+            }
+            else if($response instanceof ResponseInterface)
+            {
+                return $response;
+            }
+            else
+            {
+                Throw new \Exception('the response is not a string or a responseinterface');
+            }
+
+        }
+
 }
