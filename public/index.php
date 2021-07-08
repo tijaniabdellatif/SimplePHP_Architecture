@@ -4,7 +4,7 @@
  * App initialisation
  * $app will have a list of modules
  * $app is a global object
- * 
+ *
  * Here we will mount our application
  */
 

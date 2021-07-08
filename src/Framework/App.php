@@ -28,12 +28,13 @@ class App
      * exemple : BlogModule in order to render a page of the Blog
      * @param array $modules
      */
-     public function __construct(array $modules = []){
+    public function __construct(array $modules = [])
+    {
 
-         $this->routemanager = new ManagerRouter();
-         foreach ($modules as $module){
-          $this->modules[] = new $module($this->routemanager);
-         }
+        $this->routemanager = new ManagerRouter();
+        foreach ($modules as $module) {
+            $this->modules[] = new $module($this->routemanager);
+        }
     }
 
     /**
@@ -54,40 +55,36 @@ class App
                 ->withHeader('Location', substr($url, 0, -1));
         }
 
-       $result = $this->routemanager->match($request);
-        if(is_null($result)) {
+        $result = $this->routemanager->match($request);
+        if (is_null($result)) {
             return new Response(
-                404
-                , [],
-                '<h1>Error 404</h1>');
+                404,
+                [],
+                '<h1>Error 404</h1>'
+            );
         }
 
             $params = $result->getParams();
-            $request = array_reduce(array_keys($params),
-                function ($request,$key) use ($params)
-                {
+            $request = array_reduce(
+                array_keys($params),
+                function ($request, $key) use ($params) {
 
-                return $request->withAttribute($key,$params[$key]);
-
-               },$request);
+                    return $request->withAttribute($key, $params[$key]);
+                },
+                $request
+            );
 
             $response = call_user_func_array(
                 $result->getCallback(),
-                [$request]);
+                [$request]
+            );
 
-            if(is_string($response))
-            {
-                return new Response(200,[],$response);
-            }
-            else if($response instanceof ResponseInterface)
-            {
-                return $response;
-            }
-            else
-            {
-                Throw new \Exception('the response is not a string or a responseinterface');
-            }
-
+        if (is_string($response)) {
+            return new Response(200, [], $response);
+        } elseif ($response instanceof ResponseInterface) {
+            return $response;
+        } else {
+            throw new \Exception('the response is not a string or a responseinterface');
         }
-
+    }
 }
