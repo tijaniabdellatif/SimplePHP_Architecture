@@ -1,14 +1,16 @@
 <?php
 
 
-namespace Framework;
+namespace Framework\Renderer;
+
+
 
 /**
  * Class ManagerRenderer : manage the rendering of a view
  * based on a router call
  * @namespace  Framework
  */
-class ManagerRenderer
+class ManagerRenderer implements RendererInterface
 {
     /**
      * Default Namespace
@@ -26,6 +28,13 @@ class ManagerRenderer
      */
      private $globals = [];
 
+     public function __construct(?string $defaultPath=null){
+
+         if(!is_null($defaultPath)){
+             $this->addPath($defaultPath);
+         }
+
+     }
     /**
      * @param string $namespace
      * @param string|null $path

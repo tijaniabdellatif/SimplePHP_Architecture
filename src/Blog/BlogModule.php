@@ -3,16 +3,14 @@
 
 namespace App\Blog;
 
-
-use Framework\ManagerRenderer;
 use Framework\ManagerRouter;
-use Psr\Http\Message\ResponseInterface;
+use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class BlogModule
 {
     private $renderer;
-    public function __construct(ManagerRouter $routemanager,ManagerRenderer $renderer)
+    public function __construct(ManagerRouter $routemanager,RendererInterface $renderer)
     {
         $this->renderer = $renderer;
         $this->renderer->addPath('blog',__DIR__.'/views');

@@ -1,0 +1,19 @@
+{% extends 'layout.twig' %}
+{% block title "Articles" %}
+{% block body %}
+
+    <h1>Welcome to my blog</h1>
+    <ul>
+
+        <li>Article 1</li>
+        <li>Article 2</li>
+        <li>Article 3</li>
+        <li>Article 4</li>
+        <li>
+            <a href="{{ router.getGeneratedUri('blog.show',{slug:'avert-45erd'}) }}">Article 5</a>
+        </li>
+
+    </ul>
+{% endblock %}
+
+
