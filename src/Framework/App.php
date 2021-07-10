@@ -4,6 +4,7 @@ namespace Framework;
 
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -24,24 +25,24 @@ class App
      */
     private $routemanager;
 
+
+    /**
+     * @var $container
+     */
+    private $container;
     /**
      * App constructor
      * List of modules to load in the application.
      * exemple : BlogModule in order to render a page of the Blog
      * @param array $modules
-     * @param array $dependencies
+     * @param ContainerInterface $container
      */
-     public function __construct(array $modules = [],array $dependencies = []){
+     public function __construct(ContainerInterface $container,array $modules = []){
 
-         $this->routemanager = new ManagerRouter();
 
-         if(array_key_exists('renderer',$dependencies))
-         {
-              $dependencies['renderer']->addGlobal('router',$this->routemanager);
-         }
-
-         foreach ($modules as $module){
-          $this->modules[] = new $module($this->routemanager,$dependencies['renderer']);
+        $this->container = $container;
+          foreach ($modules as $module){
+          $this->modules[] = $container->get($module);
          }
     }
 
@@ -63,7 +64,7 @@ class App
                 ->withHeader('Location', substr($url, 0, -1));
         }
 
-       $result = $this->routemanager->match($request);
+       $result = $this->container->get(ManagerRouter::class)->match($request);
         if(is_null($result)) {
             return new Response(
                 404
@@ -80,9 +81,12 @@ class App
 
                },$request);
 
-            $response = call_user_func_array(
-                $result->getCallback(),
-                [$request]);
+            $callback = $result->getCallback();
+            if(is_string($callback))
+            {
+               $callback = $this->container->get($callback);
+            }
+            $response = call_user_func_array($callback, [$request]);
 
             if(is_string($response))
             {

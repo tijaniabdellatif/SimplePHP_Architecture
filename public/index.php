@@ -7,36 +7,38 @@
  * 
  * Here we will mount our application
  */
-use App\Blog\BlogModule;
 
-require(dirname(__DIR__).DIRECTORY_SEPARATOR.'init/init.php');
+use App\Blog\BlogModule;
 require '../vendor/autoload.php';
 
-/**
- * Renderer
- */
-$renderer = new \Framework\Renderer\TwigRenderer(dirname(__DIR__).'/templates');
 
-/**
- * Twig loader and twig env
- */
-$loader = new Twig_Loader_Filesystem(dirname(__DIR__).'/templates');
-$twig = new Twig_Environment($loader,[
-]);
-
-$app = new \Framework\App([
+$modules = [
 
      BlogModule::class
-],[
+];
 
-    'renderer' => $renderer
-]);
+$builder = new \DI\ContainerBuilder();
+$builder->addDefinitions(dirname(__DIR__) .'/config/config.php');
+
+
+foreach($modules as $module){
+
+     if($module::__DEFINITIONS__){
+
+           $builder->addDefinitions($module::__DEFINITIONS__);
+     }
+}
+
+$builder->addDefinitions(dirname(__DIR__) . '/config.php');
+$container = $builder->build();
+
+
+$app = new \Framework\App($container,$modules);
 
 try {
     $response = $app->run(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
 } catch (Exception $e) {
 
-    echo 'Errors in : ' .$e->getMessage();
+    return $e->getMessage();
 }
-
 \Http\Response\send($response);
