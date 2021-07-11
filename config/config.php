@@ -5,7 +5,10 @@ use  Framework\Renderer\RendererInterface;
 
 return[
     
-    
+    'database.host'=>'localhost',
+    'database.username' => 'root',
+    'database.password' => '',
+    'database.name' => 'PE_blog',
     'views.path' => dirname(__DIR__).'/templates',
     'twig.extensions' => [
 

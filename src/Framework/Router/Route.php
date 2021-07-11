@@ -13,7 +13,7 @@ class Route
     /**
      * @var string
      */
-    private  $name;
+    private $name;
     /**
      * @var callable
      */
@@ -29,7 +29,7 @@ class Route
      * @param callable|string $callback
      * @param array $params
      */
-    public function __construct(string $name, $callback,array $params)
+    public function __construct(string $name, $callback, array $params)
     {
          $this->name=$name;
          $this->callback=$callback;
@@ -39,7 +39,8 @@ class Route
      *  getName() function to get the route name
      * @return string
      */
-    public function getName(): string{
+    public function getName(): string
+    {
 
         return $this->name;
     }
@@ -49,10 +50,10 @@ class Route
      * of the route
      * @return callable|string
      */
-    public function getCallback(){
+    public function getCallback()
+    {
 
         return $this->callback;
-
     }
 
     /**
@@ -60,9 +61,9 @@ class Route
      * an url
      * @return array of String
      */
-    public function getParams(): array{
+    public function getParams(): array
+    {
 
         return $this->params;
-
     }
 }

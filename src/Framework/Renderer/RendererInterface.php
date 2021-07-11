@@ -21,4 +21,3 @@ interface RendererInterface
      */
     public function addGlobal(string $key, $value): void;
 }
-

@@ -2,7 +2,6 @@
 
 namespace Framework;
 
-
 use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,13 +36,14 @@ class App
      * @param array $modules
      * @param ContainerInterface $container
      */
-     public function __construct(ContainerInterface $container,array $modules = []){
+    public function __construct(ContainerInterface $container, array $modules = [])
+    {
 
 
         $this->container = $container;
-          foreach ($modules as $module){
-          $this->modules[] = $container->get($module);
-         }
+        foreach ($modules as $module) {
+            $this->modules[] = $container->get($module);
+        }
     }
 
     /**
@@ -64,43 +64,46 @@ class App
                 ->withHeader('Location', substr($url, 0, -1));
         }
 
-       $result = $this->container->get(ManagerRouter::class)->match($request);
-        if(is_null($result)) {
+        $result = $this->container->get(ManagerRouter::class)->match($request);
+        if (is_null($result)) {
             return new Response(
-                404
-                , [],
-                '<h1>Error 404</h1>');
+                404,
+                [],
+                '<h1>Error 404</h1>'
+            );
         }
 
             $params = $result->getParams();
-            $request = array_reduce(array_keys($params),
-                function ($request,$key) use ($params)
-                {
+            $request = array_reduce(
+                array_keys($params),
+                function ($request, $key) use ($params) {
 
-                return $request->withAttribute($key,$params[$key]);
-
-               },$request);
+                    return $request->withAttribute($key, $params[$key]);
+                },
+                $request
+            );
 
             $callback = $result->getCallback();
-            if(is_string($callback))
-            {
-               $callback = $this->container->get($callback);
-            }
+        if (is_string($callback)) {
+            $callback = $this->container->get($callback);
+        }
             $response = call_user_func_array($callback, [$request]);
 
-            if(is_string($response))
-            {
-                return new Response(200,[],$response);
-            }
-            else if($response instanceof ResponseInterface)
-            {
-                return $response;
-            }
-            else
-            {
-                Throw new \Exception('the response is not a string or a responseinterface');
-            }
-
+        if (is_string($response)) {
+            return new Response(200, [], $response);
+        } elseif ($response instanceof ResponseInterface) {
+            return $response;
+        } else {
+            throw new \Exception('the response is not a string or a responseinterface');
         }
+    }
 
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer():ContainerInterface
+    {
+
+            return $this->container;
+    }
 }

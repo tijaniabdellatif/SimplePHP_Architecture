@@ -24,7 +24,7 @@ class ManagerRouter
      */
     public function __construct()
     {
-       $this->managerrouter = new FastRouteRouter();
+        $this->managerrouter = new FastRouteRouter();
     }
 
     /**
@@ -33,11 +33,11 @@ class ManagerRouter
      * @param callable|string $callable
      * @param string $name
      */
-    public function get(string $path, $callable,string $name)
+    public function get(string $path, $callable, string $name)
     {
 
            $this->managerrouter
-               ->addRoute(new ZendRoute($path,$callable,['GET'],$name));
+               ->addRoute(new ZendRoute($path, $callable, ['GET'], $name));
     }
 
     /**
@@ -51,15 +51,15 @@ class ManagerRouter
          * Result of a route result Zend
          */
          $result = $this->managerrouter->match($request);
-         if($result->isSuccess()){
-             return new Route(
-                 $result->getMatchedRouteName(),
-                 $result->getMatchedMiddleware(),
-                 $result->getMatchedParams());
-         }
+        if ($result->isSuccess()) {
+            return new Route(
+                $result->getMatchedRouteName(),
+                $result->getMatchedMiddleware(),
+                $result->getMatchedParams()
+            );
+        }
 
-         return NULL;
-
+         return null;
     }
 
     /**
@@ -70,8 +70,6 @@ class ManagerRouter
     public function getGeneratedUri(string $name, array $params): ?string
     {
         return $this->managerrouter
-            ->generateUri($name,$params);
-
+            ->generateUri($name, $params);
     }
-
 }
