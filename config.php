@@ -2,6 +2,6 @@
 
 return [
     
-    'blog.prefix' => '/news',
+
     
 ];

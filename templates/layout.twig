@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
     <title>
         {% block title "Welcome to my blog" %}
+        Welcome to my blog
     </title>
 </head>
 
@@ -29,12 +30,12 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-green-500 rounded-full" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
-            <span class="ml-3 text-xl">Tailblocks</span>
+            <span class="ml-3 text-xl">NINJA</span>
         </a>
         <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-            <a class="mr-5 hover:text-white">First Link</a>
-            <a class="mr-5 hover:text-white">Second Link</a>
-            <a class="mr-5 hover:text-white">Third Link</a>
+            <a class="mr-5 hover:text-white" href="{{ path('blog.index') }}">Home</a>
+            <a class="mr-5 hover:text-white cursor:pointer">Blog</a>
+            <a class="mr-5 hover:text-white">About us</a>
             <a class="mr-5 hover:text-white">Fourth Link</a>
         </nav>
         <button class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">Button
@@ -65,20 +66,21 @@
 
 </div>
 
-<main>
-
-    <section id="articles">
-
-        <div class="w-full mx-auto">
-
-        {% block body %}{% endblock %}
+<main class="w-full mx-auto">
 
 
 
-        </div>
 
-    </section>
+
+        {% block body %}
+
+        {% endblock %}
+
+
+
 </main>
+
+
 <footer class="text-gray-400 bg-gray-900 body-font">
     <div class="relative w-full flex items-center invisible md:visible md:pb-12" x-data="getCarouselData()">
         <button class="absolute bg-blue-800 hover:bg-blue-700 text-white text-2xl font-bold hover:shadow rounded-full w-16 h-16 ml-12" x-on:click="decrement()">

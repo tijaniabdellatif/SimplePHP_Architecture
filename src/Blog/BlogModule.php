@@ -27,7 +27,7 @@ class BlogModule extends Module
         );
 
         $routemanager->get(
-            $prefix.'/{slug:[a-z\-0-9]+}',
+            $prefix.'/{slug:[a-z\-0-9]+}-{id:[0-9]+}',
             BlogAction::class,
             'blog.show'
         );
