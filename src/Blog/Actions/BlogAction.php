@@ -24,7 +24,7 @@ class BlogAction
     /**
      * @var ManagerRouter
      */
-    private  $router;
+    private $router;
     /**
      * Trait RouterAction
      */
@@ -36,7 +36,7 @@ class BlogAction
      * @param \PDO $pdo
      * @param ManagerRouter $router
      */
-    public function __construct(RendererInterface $renderer, PostTable $postTable,ManagerRouter  $router)
+    public function __construct(RendererInterface $renderer, PostTable $postTable, ManagerRouter  $router)
     {
         $this->renderer=$renderer;
         $this->postTable = $postTable;
@@ -54,18 +54,18 @@ class BlogAction
         if ($slug) {
             return $this->show($request);
         } else {
-            return $this->index();
+            return $this->index($request);
         }
     }
 
     /**
      * @return string
      */
-    public function index(): string
+    public function index(ServerRequestInterface  $request): string
     {
-        $posts = $this->postTable->findPaginated();
-
-        return $this->renderer->render('@blog/index',compact('posts'));
+        $params = $request->getQueryParams();
+        $posts = $this->postTable->findPaginated(9, $params['p'] ?? 1);
+        return $this->renderer->render('@blog/index', compact('posts'));
     }
 
 
@@ -79,15 +79,15 @@ class BlogAction
         $data = $this->postTable->find($request->getAttribute('id'));
 
 
-         if($data->slug !== $slug)
-         {
-            return $this->redirect('blog.show',[
+        if ($data->slug !== $slug) {
+            return $this->redirect('blog.show', [
 
-                 'slug'=>$data->slug,
-                 'id' => $data->id
+                'slug'=>$data->slug,
+                'id' => $data->id
 
-             ]);
-         }
+            ]);
+        }
+
 
 
         return $this->renderer->render(

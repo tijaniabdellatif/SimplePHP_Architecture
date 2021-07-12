@@ -67,9 +67,15 @@ class ManagerRouter
      * @param string $string
      * @param array $array
      */
-    public function getGeneratedUri(string $name, array $params): ?string
+    public function getGeneratedUri(string $name, array $params = [], array $queryParams = []): ?string
     {
-        return $this->managerrouter
+        $uri =  $this->managerrouter
             ->generateUri($name, $params);
+
+        if (!empty($queryParams)) {
+            return $uri . '?' .http_build_query($queryParams);
+        }
+
+        return $uri;
     }
 }

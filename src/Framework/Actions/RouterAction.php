@@ -10,7 +10,8 @@ use Psr\Http\Message\ResponseInterface;
  * Trait RouterAction
  * @package Framework\Actions
  */
-trait RouterAction{
+trait RouterAction
+{
 
     /**
      * Send a redirection Response 301
@@ -19,11 +20,11 @@ trait RouterAction{
      * @return ResponseInterface
      *
      */
-    public function redirect(string $path,array $params=[]):ResponseInterface{
-        $redirectUri = $this->router->getGeneratedUri($path,$params);
+    public function redirect(string $path, array $params = []):ResponseInterface
+    {
+        $redirectUri = $this->router->getGeneratedUri($path, $params);
             return (new Response())
                 ->withStatus(301)
-                ->withHeader('location',$redirectUri);
-
+                ->withHeader('location', $redirectUri);
     }
 }

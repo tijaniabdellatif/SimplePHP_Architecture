@@ -19,7 +19,12 @@
         "zendframework/zend-expressive-fastroute": "1.2.0",
         "twig/twig": "2.4",
         "php-di/php-di": "^6.3",
-        "robmorgan/phinx": "^0.12.7"
+        "robmorgan/phinx": "^0.12.7",
+        "laminas/laminas-paginator": "^2.10",
+        "laminas/laminas-view": "^2.12",
+        "pagerfanta/pagerfanta": "2",
+        "symfony/asset": "^5.3",
+        "jimmiw/php-time-ago": "^3.2"
 
     },
     "require-dev": {

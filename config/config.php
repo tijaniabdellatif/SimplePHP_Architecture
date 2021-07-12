@@ -12,7 +12,10 @@ return[
     'views.path' => dirname(__DIR__).'/templates',
     'twig.extensions' => [
 
-        \DI\get(\App\Framework\Router\RouterTwigExtension::class)
+        \DI\get(\App\Framework\Router\RouterTwigExtension::class),
+        \DI\get(\App\Framework\Twig\TwigPagerExtension::class),
+        \DI\get(\App\Framework\Twig\TwigTextExtension::class),
+        \DI\get(\App\Framework\Twig\TwigTimeExtension::class)
     ],
     ManagerRouter::class=>\DI\create(ManagerRouter::class),
     RendererInterface::class => \DI\factory(\Framework\Renderer\TwigRendererFactory::class),
