@@ -3,6 +3,7 @@
 
 namespace Framework;
 
+use App\Blog\Actions\AdminBlogAction;
 use Framework\Router\Route;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\FastRouteRouter;
@@ -27,6 +28,8 @@ class ManagerRouter
         $this->managerrouter = new FastRouteRouter();
     }
 
+
+
     /**
      *
      * @param string $path
@@ -41,6 +44,30 @@ class ManagerRouter
     }
 
     /**
+     * @param string $path
+     * @param $callable
+     * @param string|null $name
+     */
+    public function post(string $path, $callable, ?string $name = null)
+    {
+
+        $this->managerrouter
+            ->addRoute(new ZendRoute($path, $callable, ['POST'], $name));
+    }
+
+    /**
+     * @param string $path
+     * @param $callable
+     * @param string|null $name
+     */
+    public function delete(string $path, $callable, ?string $name = null)
+    {
+
+        $this->managerrouter
+            ->addRoute(new ZendRoute($path, $callable, ['DELETE'], $name));
+    }
+
+    /**
      *
      * @param ServerRequestInterface $request
      * @return Route|Null
@@ -50,6 +77,7 @@ class ManagerRouter
         /**
          * Result of a route result Zend
          */
+
          $result = $this->managerrouter->match($request);
         if ($result->isSuccess()) {
             return new Route(

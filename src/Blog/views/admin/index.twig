@@ -1,0 +1,49 @@
+{% extends '@admin/layout.twig' %}
+{% block title "Dashboard" %}
+{% block body %}
+
+<div>
+    <a type="button" class="nav-link btn btn-success" href="{{ path('blog.admin.create') }}">Add Article</a>
+</div>
+<table class="table table-striped">
+  <thead>
+
+  <tr>
+    <td>Title</td>
+      <td>Actions</td>
+  </tr>
+  </thead>
+
+    <tbody>
+    {% for item in items %}
+
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>
+                <a type="button" href="{{ path('blog.admin.edit',{id:item.id}) }}" class="btn btn-outline-info">Edit</a>
+                <form style="display:inline;margin:10px" action="{{ path('blog.admin.delete',{id:item.id}) }}" method="post" onsubmit="return confirm('Are you sure ?')">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button class="btn btn-danger">Delete</button>
+
+                </form>
+
+            </td>
+
+
+
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+   <div class="container mt-4">
+       {{ paginate(items,'blog.admin.index') }}
+
+   </div>
+
+
+{% endblock %}
+
+

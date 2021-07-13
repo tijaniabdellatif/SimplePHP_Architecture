@@ -32,9 +32,8 @@ return
             'user' => $app->getContainer()->get('database.username'),
             'pass' => $app->getContainer()->get('database.password'),
             'port' => '3306',
-            'charset' => 'utf8',
-        ],
-
-    ],
+            'charset' => 'utf8'
+        ]
+    ]
 
 ];

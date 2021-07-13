@@ -7,7 +7,6 @@ use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAction;
 use Framework\ManagerRouter;
 use Framework\Renderer\RendererInterface;
-use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
 class BlogAction

@@ -7,9 +7,7 @@ use function DI\get;
 
 return [
 
-
    'blog.prefix' => '/blog',
-    BlogModule::class=>autowire(BlogModule::class)
-    ->constructorParameter('prefix', get('blog.prefix'))
+
 
 ];

@@ -15,7 +15,8 @@ return[
         \DI\get(\App\Framework\Router\RouterTwigExtension::class),
         \DI\get(\App\Framework\Twig\TwigPagerExtension::class),
         \DI\get(\App\Framework\Twig\TwigTextExtension::class),
-        \DI\get(\App\Framework\Twig\TwigTimeExtension::class)
+        \DI\get(\App\Framework\Twig\TwigTimeExtension::class),
+        \DI\get(\App\Framework\Twig\TwigAssetExtension::class)
     ],
     ManagerRouter::class=>\DI\create(ManagerRouter::class),
     RendererInterface::class => \DI\factory(\Framework\Renderer\TwigRendererFactory::class),
