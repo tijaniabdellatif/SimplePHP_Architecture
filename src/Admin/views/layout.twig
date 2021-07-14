@@ -1,0 +1,76 @@
+<?php
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/solar/bootstrap.min.css" integrity="sha384-NCwXci5f5ZqlDw+m7FwZSAwboa0svoPPylIW3Nf+GBDsyVum+yArYnaFLE9UDzLd" crossorigin="anonymous">
+    <title>
+        {% block title "" %}
+        Welcome to my blog
+    </title>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('blog.admin.index') }}">View Articles
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a type="button" class="nav-link btn btn-success" href="{{ path('blog.admin.create') }}">Add Article</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="container mt-4">
+    <div class="row" style="align-content: center;
+    justify-content: space-between;
+    align-items: flex-start;">
+        {% if flash('success') %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" aria-label="Close"></button>
+                <strong>Well done!</strong> You successfully  <a href="#" class="alert-link">{{ flash('success')  }}</a>.
+            </div>
+        {% endif %}
+        {% if flash('info') %}
+            <div class="alert alert-dismissible alert-info">
+                <button type="button" class="btn-close" aria-label="Close"></button>
+                <strong>Heads up!</strong>You've successfully   <a href="#" class="alert-link">{{ flash('info')  }}</a>.
+            </div>
+        {% endif %}
+        {% if flash('delete') %}
+            <div class="alert alert-dismissible alert-primary">
+                <button type="button" class="btn-close" aria-label="Close"></button>
+                <strong>Oh snap!</strong>You've successfully   <a href="#" class="alert-link">{{ flash('delete') }}</a>.
+            </div>
+        {% endif %}
+        {% block body %}
+
+        {% endblock %}
+    </div>
+
+</div>
+</div>
+
+</body>
+
+</html>

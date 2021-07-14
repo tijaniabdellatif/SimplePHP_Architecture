@@ -1,0 +1,34 @@
+{% extends '@admin/layout.twig' %}
+{% block title "Add new article" %}
+{% block body %}
+
+    <div class="container">
+        <h1>Add an Article</h1>
+        <p class="text-primary">Create Article</p>
+    </div>
+
+    <div class="container">
+        <form action="{{ path('blog.admin.create') }}" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label for="name" class="form-label mt-4">Article Name</label>
+                    <input type="text" class="form-control" name="name" id="name" aria-describedby="name Help" placeholder="Article name">
+                    <small id="name" class="form-text text-muted">Add an article name</small>
+                </div>
+                <div class="form-group">
+                    <label for="slug" class="form-label mt-4">Article Slug</label>
+                    <input type="text" class="form-control" name="slug" id="slug"  placeholder="Article slug">
+                    <small id="slug" class="form-text text-muted">Add Article slug</small>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="form-label mt-4">Article Content</label>
+                    <textarea class="form-control" name="content" id="content" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-success">Create</button>
+            </fieldset>
+        </form>
+    </div>
+
+{% endblock %}
+
+

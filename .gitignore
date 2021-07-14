@@ -1,0 +1,6 @@
+.dist
+.idea
+vendor
+composer.lock
+.phpunit.result.cache
+PublicFolders/node_modules
