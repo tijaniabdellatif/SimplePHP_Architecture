@@ -18,7 +18,7 @@ class ManagerRouter
     /**
      * @var FastRouteRouter
      */
-    private $managerrouter;
+    private FastRouteRouter $managerrouter;
 
     /**
      * ManagerRouter constructor.
@@ -68,6 +68,23 @@ class ManagerRouter
     }
 
     /**
+     * Generate Crud system
+     * @param string $prefixPath
+     * @param $callable
+     * @param string $prefixName
+     * @return string
+     */
+    public function crud(string $prefixPath, $callable, string $prefixName)
+    {
+        $this->get($prefixPath, $callable, $prefixName.'.index');
+        $this->get($prefixPath."/new", $callable, $prefixName.'.create');
+        $this->post($prefixPath."/new", $callable);
+        $this->get($prefixPath."/{id:\d+}", $callable, $prefixName.'.edit');
+        $this->post($prefixPath."/{id:\d+}", $callable);
+        $this->delete($prefixPath."/{id:\d+}", $callable, $prefixName.'.delete');
+    }
+
+    /**
      *
      * @param ServerRequestInterface $request
      * @return Route|Null
@@ -92,8 +109,10 @@ class ManagerRouter
 
     /**
      * generate an uri based on a request/response
-     * @param string $string
-     * @param array $array
+     * @param string $name
+     * @param array $params
+     * @param array $queryParams
+     * @return string|null
      */
     public function getGeneratedUri(string $name, array $params = [], array $queryParams = []): ?string
     {

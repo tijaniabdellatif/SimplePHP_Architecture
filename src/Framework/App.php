@@ -19,20 +19,16 @@ class App
      * @var array $modules
      */
     private array $modules = [];
-    /**
-     * @var ManagerRouter
-     */
-    private $routemanager;
 
 
     /**
-     * @var $container
+     * @var ContainerInterface $container
      */
-    private $container;
+    private ContainerInterface $container;
     /**
      * App constructor
      * List of modules to load in the application.
-     * exemple : BlogModule in order to render a page of the Blog
+     * example : BlogModule in order to render a page of the Blog
      * @param array $modules
      * @param ContainerInterface $container
      */

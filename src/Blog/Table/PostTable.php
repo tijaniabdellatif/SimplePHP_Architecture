@@ -7,19 +7,20 @@ use App\Blog\Entities\Post;
 use App\Framework\Database\PaginatedQuery;
 use Laminas\Paginator\Paginator;
 use Pagerfanta\Pagerfanta;
+use PDO;
 
 class PostTable
 {
     /**
-     * @var \PDO
+     * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * PostTable constructor.
-     * @param \PDO $pdo
+     * @param PDO $pdo
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo=$pdo;
     }
@@ -56,7 +57,7 @@ class PostTable
 
         $query = $this->pdo->prepare('SELECT * FROM posts WHERE id=?');
         $query->execute([$id]);
-        $query->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+        $query->setFetchMode(PDO::FETCH_CLASS, Post::class);
         return  $query->fetch();
     }
 
@@ -111,7 +112,7 @@ class PostTable
         return $statement->execute([$id]);
     }
 
-    private function buildFieldsQuery(array $params)
+    private function buildFieldsQuery(array $params): string
     {
         return join(', ', array_map(function ($field) {
             return "$field = :$field";

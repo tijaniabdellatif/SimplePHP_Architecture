@@ -7,6 +7,7 @@ use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAction;
 use Framework\ManagerRouter;
 use Framework\Renderer\RendererInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class BlogAction
@@ -14,16 +15,16 @@ class BlogAction
     /**
      * @var RendererInterface
      */
-    private $renderer;
+    private RendererInterface $renderer;
 
     /**
      * @var PostTable
      */
-    private $postTable;
+    private PostTable $postTable;
     /**
      * @var ManagerRouter
      */
-    private $router;
+    private ManagerRouter $router;
     /**
      * Trait RouterAction
      */
@@ -32,7 +33,7 @@ class BlogAction
     /**
      * BlogAction constructor.
      * @param RendererInterface $renderer
-     * @param \PDO $pdo
+     * @param PostTable $postTable
      * @param ManagerRouter $router
      */
     public function __construct(RendererInterface $renderer, PostTable $postTable, ManagerRouter  $router)
@@ -44,7 +45,7 @@ class BlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function __invoke(ServerRequestInterface  $request)
     {
@@ -70,7 +71,7 @@ class BlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function show(ServerRequestInterface $request):string
     {

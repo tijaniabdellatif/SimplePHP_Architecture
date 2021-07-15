@@ -7,6 +7,8 @@ use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAction;
 use Framework\ManagerRouter;
 use Framework\Renderer\RendererInterface;
+use PDO;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AdminBlogAction
@@ -14,16 +16,16 @@ class AdminBlogAction
     /**
      * @var RendererInterface
      */
-    private $renderer;
+    private RendererInterface $renderer;
 
     /**
      * @var PostTable
      */
-    private $postTable;
+    private PostTable $postTable;
     /**
      * @var ManagerRouter
      */
-    private $router;
+    private ManagerRouter $router;
     /**
      * Trait RouterAction
      */
@@ -32,7 +34,7 @@ class AdminBlogAction
     /**
      * BlogAction constructor.
      * @param RendererInterface $renderer
-     * @param \PDO $pdo
+     * @param PostTable $postTable
      * @param ManagerRouter $router
      */
     public function __construct(RendererInterface $renderer, PostTable $postTable, ManagerRouter  $router)
@@ -44,7 +46,7 @@ class AdminBlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function __invoke(ServerRequestInterface  $request)
     {
@@ -73,7 +75,7 @@ class AdminBlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function edit(ServerRequestInterface $request)
     {
@@ -81,11 +83,7 @@ class AdminBlogAction
 
         if ($request->getMethod() === 'POST') {
             $params = $this->getDBParams($request);
-            $params = array_merge($params, [
-
-                'updated_at' => date('Y-m-d H:i:s')
-
-            ]);
+            $params['updates_at'] = date('Y-m-d H:i:s');
             $this->postTable->update($item->id, $params);
             return $this->redirect('blog.admin.index');
         }
@@ -94,7 +92,7 @@ class AdminBlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function create(ServerRequestInterface $request)
     {
@@ -115,9 +113,9 @@ class AdminBlogAction
 
     /**
      * @param ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
-    public function delete(ServerRequestInterface $request)
+    public function delete(ServerRequestInterface $request): ResponseInterface
     {
 
             $this->postTable->delete($request->getAttribute('id'));
