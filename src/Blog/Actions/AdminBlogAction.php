@@ -4,6 +4,8 @@
 namespace App\Blog\Actions;
 
 use App\Blog\Table\PostTable;
+use App\Framework\Session\FlashService;
+use App\Framework\Session\SessionInterface;
 use Framework\Actions\RouterAction;
 use Framework\ManagerRouter;
 use Framework\Renderer\RendererInterface;
@@ -26,6 +28,11 @@ class AdminBlogAction
      * @var ManagerRouter
      */
     private ManagerRouter $router;
+
+    /**
+     * @var FlashService
+     */
+    private FlashService $flash;
     /**
      * Trait RouterAction
      */
@@ -37,11 +44,16 @@ class AdminBlogAction
      * @param PostTable $postTable
      * @param ManagerRouter $router
      */
-    public function __construct(RendererInterface $renderer, PostTable $postTable, ManagerRouter  $router)
-    {
+    public function __construct(
+        RendererInterface $renderer,
+        PostTable $postTable,
+        ManagerRouter  $router,
+        FlashService $flash
+    ) {
         $this->renderer=$renderer;
         $this->postTable = $postTable;
         $this->router = $router;
+        $this->flash = $flash;
     }
 
     /**
@@ -83,8 +95,9 @@ class AdminBlogAction
 
         if ($request->getMethod() === 'POST') {
             $params = $this->getDBParams($request);
-            $params['updates_at'] = date('Y-m-d H:i:s');
+            $params['updated_at'] = date('Y-m-d H:i:s');
             $this->postTable->update($item->id, $params);
+            $this->flash->success(' modified the article');
             return $this->redirect('blog.admin.index');
         }
         return $this->renderer->render('@blog/admin/edit', compact('item'));
@@ -106,6 +119,7 @@ class AdminBlogAction
             ]);
 
             $this->postTable->insert($params);
+            $this->flash->info(' created an article');
             return $this->redirect('blog.admin.index');
         }
         return $this->renderer->render('@blog/admin/create');

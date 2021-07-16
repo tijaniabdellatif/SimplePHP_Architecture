@@ -63,7 +63,7 @@ class PostTable
 
     /**
      * @param int $id
-     * @param array $fields
+     * @param array $params
      * @return bool
      */
     public function update(int $id, array $params):bool
