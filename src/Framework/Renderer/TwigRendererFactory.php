@@ -4,6 +4,7 @@
 namespace Framework\Renderer;
 
 use Psr\Container\ContainerInterface;
+use Twig\Extension\DebugExtension;
 
 class TwigRendererFactory
 {
@@ -13,8 +14,8 @@ class TwigRendererFactory
 
         $viewPath = $container->get('views.path');
         $loader = new \Twig_Loader_Filesystem($viewPath);
-        $twig = new \Twig_Environment($loader);
-
+        $twig = new \Twig_Environment($loader, ['debug' => true]);
+        $twig->addExtension(new DebugExtension());
         $extensions = $container->get('twig.extensions');
         if ($container->has('twig.extensions')) {
             foreach ($extensions as $extension) {
